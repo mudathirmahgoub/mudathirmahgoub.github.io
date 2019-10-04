@@ -5,7 +5,7 @@
 var __env = {}
 
 // production api Url. No need to change this when deploying the development branch
-__env.apiUrl = "http://kind.cs.uiowa.edu:8080/cvcservices/";
+__env.apiUrl = "https://cors-anywhere.herokuapp.com/http://kind.cs.uiowa.edu:8080/cvcservices/";
 
 // Replace this file with env.dev.js to set development configuration
 
