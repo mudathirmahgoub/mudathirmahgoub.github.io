@@ -5,7 +5,7 @@
 var __env = {}
 
 // production api Url. No need to change this when deploying the development branch
-__env.apiUrl = "https://kind.cs.uiowa.edu/cvcservices/";
+__env.apiUrl = "http://kind.cs.uiowa.edu/cvcservices/";
 
 // Replace this file with env.dev.js to set development configuration
 
