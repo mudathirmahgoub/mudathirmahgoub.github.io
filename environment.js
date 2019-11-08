@@ -10,7 +10,7 @@ __env.apiUrl = "https://kind.cs.uiowa.edu/cvcservices/";
 // Replace this file with env.dev.js to set development configuration
 
 // remote development api Url
-//__env.apiUrl = "http://kind.cs.uiowa.edu:8080/cvcservices-dev/";
+//__env.apiUrl = "https://kind.cs.uiowa.edu/cvcservices-dev/";
 
 // local development api Url
 //__env.apiUrl = "http://localhost:8080/";
