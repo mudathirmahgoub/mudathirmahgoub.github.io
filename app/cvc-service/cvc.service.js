@@ -166,7 +166,7 @@ angular.module('cvc')
                 ).then(function successCallback(response) {
                         var data = response.data;
                         angular.forEach(data, function (value, key) {
-                            if(value.type =="bool"){
+                            if(value.type =="bool" && value.alternate){
                                 data["no-" + key] = data[key];
                             }
                         });
