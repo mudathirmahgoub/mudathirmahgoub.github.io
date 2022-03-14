@@ -38,429 +38,449 @@ define("ace/mode/smt_lib_highlight_rules",
     ["require", "exports", "module", "ace/lib/oop",
         "ace/mode/doc_comment_highlight_rules", "ace/mode/text_highlight_rules"],
     function (require, exports, module) {
-    "use strict";
+        "use strict";
 
-    var oop = require("../lib/oop");
-    var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
-    var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+        var oop = require("../lib/oop");
+        var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
+        var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-    var SmtLibHighlightRules = function () {
-        var keywordMapper = this.createKeywordMapper({
-          "variable.language": "this",
-          "keyword":"assert|check|sat|check|sat|assuming|declare|fun|declare|sort|define|fun|define|fun|rec|define|funs|rec|define|sort|get|value|get|assignment|get|assertions|get|proof|get|unsat|assumptions|get|unsat|core|exit|reset|reset|assertions|ite|let|set|logic|set|info|meta|info|get|info|set|option|get|option|push|pop|as|const|declare|codatatype|declare|datatype|declare|datatypes|declare|codatatypes|declare|codatatypes|par|is|match|get|model|echo|assert|rewrite|assert|reduction|assert|propagation|declare|sorts|declare|funs|declare|preds|define|declare|const|define|const|simplify|include|get|qe|get|qe|disjunct|declare|heap|emp|synth|fun|synth|inv|check|synth|declare|var|declare|primed|var|constraint|inv|constraint|set|options|Constant|Variable|InputVariable|LocalVariable|pattern|no|pattern|named|quant|inst|max|level|rr|priority|and|distinct|exists|forall|not|or|xor|divisible|bv2nat|int2bv|re.nostr|re.allchar|dt.size|fmf.card|fmf.card.val|inst|closure|emptyset|univset|sep.nil|mkTuple|tupSel|real.pi|zero|zero|NaN|to_fp|to_fp_bv|to_fp_fp|to_fp_real|to_fp_signed|to_fp_unsigned|fp.to_ubv|fp.to_sbv|RNE|RNA|RTP|RTN|RTZ|roundNearestTiesToEven|roundNearestTiesToAway|roundTowardPositive|roundTowardNegative|roundTowardZero|lambda|"
-        }, "identifier");
-        this.$rules = {
-            "start": [
-                {
-                    token : "comment",
-                    regex : ";.*$"
-                },
-                {
-                    token: "constant.numeric", // hex
-                    regex: "#x[0-9a-fA-F]+\\b"
-                },
-                {
-                    token: "constant.numeric", // binary
-                    regex: "#b[0-1]+\\b"
-                },
-                {
-                    token: "constant.numeric", // float
-                    regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
-                }, {
-                    token: "constant.language.boolean",
-                    regex: "(?:true|false)\\b"
-                }, {
-                    token: keywordMapper,
-                    regex: "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
-                }, {
-                    token: "keyword.operator",
-                    regex: "!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\|\\||\\?\\:|\\*=|%=|\\+=|\\-=|&=|\\^=|\\b(?:in|instanceof|new|delete|typeof|void)"
-                },
-                {
-                    token: "punctuation.operator",
-                    regex: "\\?|\\:|\\,|\\;|\\."
-                }, {
-                    token: "paren.lparen",
-                    regex: "[[({]"
-                }, {
-                    token: "paren.rparen",
-                    regex: "[\\])}]"
-                }, {
-                    token: "text",
-                    regex: "\\s+"
-                }
-            ],
-            "comment": [
-                {
-                    token: "comment", // comment spanning whole line
-                    regex: ".+"
-                }
-            ]
+        var SmtLibHighlightRules = function () {
+            var keywordMapper = this.createKeywordMapper({
+                "variable.language": "this",
+                "keyword": "assert|check|sat|check|sat|assuming|declare|fun|declare|sort|define|fun|define|fun|rec|define|funs|rec|define|sort|get|value|get|assignment|get|assertions|get|proof|get|unsat|assumptions|get|unsat|core|exit|reset|reset|assertions|ite|let|set|logic|set|info|meta|info|get|info|set|option|get|option|push|pop|as|const|declare|codatatype|declare|datatype|declare|datatypes|declare|codatatypes|declare|codatatypes|par|is|match|get|model|echo|assert|rewrite|assert|reduction|assert|propagation|declare|sorts|declare|funs|declare|preds|define|declare|const|define|const|simplify|include|get|qe|get|qe|disjunct|declare|heap|emp|synth|fun|synth|inv|check|synth|declare|var|declare|primed|var|constraint|inv|constraint|set|options|Constant|Variable|InputVariable|LocalVariable|pattern|no|pattern|named|quant|inst|max|level|rr|priority|and|distinct|exists|forall|not|or|xor|divisible|bv2nat|int2bv|re.nostr|re.allchar|dt.size|fmf.card|fmf.card.val|inst|closure|emptyset|univset|sep.nil|mkTuple|tupSel|real.pi|zero|zero|NaN|to_fp|to_fp_bv|to_fp_fp|to_fp_real|to_fp_signed|to_fp_unsigned|fp.to_ubv|fp.to_sbv|RNE|RNA|RTP|RTN|RTZ|roundNearestTiesToEven|roundNearestTiesToAway|roundTowardPositive|roundTowardNegative|roundTowardZero|lambda|"
+            }, "identifier");
+            this.$rules = {
+                "start": [
+                    {
+                        token: "comment",
+                        regex: ";.*$"
+                    }, {
+                        token: "keyword", //parens
+                        regex: "[\\(|\\)]"
+                    }, {
+                        token: "keyword", //lists
+                        regex: "[\\'\\(]"
+                    }, {
+                        token: "keyword", //vectors
+                        regex: "[\\[|\\]]"
+                    }, {
+                        token: "keyword", //sets and maps
+                        regex: "[\\{|\\}|\\#\\{|\\#\\}]"
+                    }, {
+                        token: "keyword", // ampersands
+                        regex: '[\\&]'
+                    }, {
+                        token: "keyword", // metadata
+                        regex: '[\\#\\^\\{]'
+                    }, {
+                        token: "keyword", // anonymous fn syntactic sugar
+                        regex: '[\\%]'
+                    }, {
+                        token: "keyword", // deref reader macro
+                        regex: '[@]'
+                    }, {
+                        token: "constant.numeric", // hex
+                        regex: "0[xX][0-9a-fA-F]+\\b"
+                    }, {
+                        token: "constant.numeric", // float
+                        regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+                    }, {
+                        token: "constant.language",
+                        regex: '[!|\\$|%|&|\\*|\\-\\-|\\-|\\+\\+|\\+||=|!=|<=|>=|<>|<|>|!|&&]'
+                    }, {
+                        token: keywordMapper,
+                        regex: "[a-zA-Z_$][a-zA-Z0-9_$\\-]*\\b"
+                    }, {
+                        token: "string", // single line
+                        regex: '"',
+                        next: "string"
+                    }, {
+                        token: "constant", // symbol
+                        regex: /:[^()\[\]{}'"\^%`,;\s]+/
+                    }, {
+                        token: "string.regexp", //Regular Expressions
+                        regex: '/#"(?:\\.|(?:\\")|[^""\n])*"/g'
+                    }
+
+                ],
+                "string": [
+                    {
+                        token: "constant.language.escape",
+                        regex: "\\\\.|\\\\$"
+                    }, {
+                        token: "string",
+                        regex: '[^"\\\\]+'
+                    }, {
+                        token: "string",
+                        regex: '"',
+                        next: "start"
+                    }
+                ]
+            };
+
+            this.normalizeRules();
         };
 
-        this.normalizeRules();
-    };
+        oop.inherits(SmtLibHighlightRules, TextHighlightRules);
 
-    oop.inherits(SmtLibHighlightRules, TextHighlightRules);
-
-    exports.SmtLibHighlightRules = SmtLibHighlightRules;
-});
+        exports.SmtLibHighlightRules = SmtLibHighlightRules;
+    });
 
 define("ace/mode/matching_brace_outdent", ["require", "exports", "module", "ace/range"],
     function (require, exports, module) {
-    "use strict";
+        "use strict";
 
-    var Range = require("../range").Range;
+        var Range = require("../range").Range;
 
-    var MatchingBraceOutdent = function () {
-    };
-
-    (function () {
-
-        this.checkOutdent = function (line, input) {
-            if (!/^\s+$/.test(line))
-                return false;
-
-            return /^\s*\}/.test(input);
+        var MatchingBraceOutdent = function () {
         };
 
-        this.autoOutdent = function (doc, row) {
-            var line = doc.getLine(row);
-            var match = line.match(/^(\s*\})/);
+        (function () {
 
-            if (!match) return 0;
+            this.checkOutdent = function (line, input) {
+                if (!/^\s+$/.test(line))
+                    return false;
 
-            var column = match[1].length;
-            var openBracePos = doc.findMatchingBracket({row: row, column: column});
+                return /^\s*\}/.test(input);
+            };
 
-            if (!openBracePos || openBracePos.row == row) return 0;
+            this.autoOutdent = function (doc, row) {
+                var line = doc.getLine(row);
+                var match = line.match(/^(\s*\})/);
 
-            var indent = this.$getIndent(doc.getLine(openBracePos.row));
-            doc.replace(new Range(row, 0, row, column - 1), indent);
-        };
+                if (!match) return 0;
 
-        this.$getIndent = function (line) {
-            return line.match(/^\s*/)[0];
-        };
+                var column = match[1].length;
+                var openBracePos = doc.findMatchingBracket({row: row, column: column});
 
-    }).call(MatchingBraceOutdent.prototype);
+                if (!openBracePos || openBracePos.row == row) return 0;
 
-    exports.MatchingBraceOutdent = MatchingBraceOutdent;
-});
+                var indent = this.$getIndent(doc.getLine(openBracePos.row));
+                doc.replace(new Range(row, 0, row, column - 1), indent);
+            };
+
+            this.$getIndent = function (line) {
+                return line.match(/^\s*/)[0];
+            };
+
+        }).call(MatchingBraceOutdent.prototype);
+
+        exports.MatchingBraceOutdent = MatchingBraceOutdent;
+    });
 
 define("ace/mode/folding/cstyle",
     ["require", "exports", "module", "ace/lib/oop", "ace/range", "ace/mode/folding/fold_mode"],
     function (require, exports, module) {
-    "use strict";
+        "use strict";
 
-    var oop = require("../../lib/oop");
-    var Range = require("../../range").Range;
-    var BaseFoldMode = require("./fold_mode").FoldMode;
+        var oop = require("../../lib/oop");
+        var Range = require("../../range").Range;
+        var BaseFoldMode = require("./fold_mode").FoldMode;
 
-    var FoldMode = exports.FoldMode = function (commentRegex) {
-        if (commentRegex) {
-            this.foldingStartMarker = new RegExp(
-                this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
-            );
-            this.foldingStopMarker = new RegExp(
-                this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.end)
-            );
-        }
-    };
-    oop.inherits(FoldMode, BaseFoldMode);
-
-    (function () {
-
-        this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-        this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
-        this.singleLineBlockCommentRe = /^\s*(\/\*).*\*\/\s*$/;
-        this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
-        this.startRegionRe = /^\s*(\/\*|\/\/)#?region\b/;
-        this._getFoldWidgetBase = this.getFoldWidget;
-        this.getFoldWidget = function (session, foldStyle, row) {
-            var line = session.getLine(row);
-
-            if (this.singleLineBlockCommentRe.test(line)) {
-                if (!this.startRegionRe.test(line) && !this.tripleStarBlockCommentRe.test(line))
-                    return "";
+        var FoldMode = exports.FoldMode = function (commentRegex) {
+            if (commentRegex) {
+                this.foldingStartMarker = new RegExp(
+                    this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
+                );
+                this.foldingStopMarker = new RegExp(
+                    this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.end)
+                );
             }
-
-            var fw = this._getFoldWidgetBase(session, foldStyle, row);
-
-            if (!fw && this.startRegionRe.test(line))
-                return "start"; // lineCommentRegionStart
-
-            return fw;
         };
+        oop.inherits(FoldMode, BaseFoldMode);
 
-        this.getFoldWidgetRange = function (session, foldStyle, row, forceMultiline) {
-            var line = session.getLine(row);
+        (function () {
 
-            if (this.startRegionRe.test(line))
-                return this.getCommentRegionBlock(session, line, row);
+            this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
+            this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+            this.singleLineBlockCommentRe = /^\s*(\/\*).*\*\/\s*$/;
+            this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
+            this.startRegionRe = /^\s*(\/\*|\/\/)#?region\b/;
+            this._getFoldWidgetBase = this.getFoldWidget;
+            this.getFoldWidget = function (session, foldStyle, row) {
+                var line = session.getLine(row);
 
-            var match = line.match(this.foldingStartMarker);
-            if (match) {
-                var i = match.index;
-
-                if (match[1])
-                    return this.openingBracketBlock(session, match[1], row, i);
-
-                var range = session.getCommentFoldRange(row, i + match[0].length, 1);
-
-                if (range && !range.isMultiLine()) {
-                    if (forceMultiline) {
-                        range = this.getSectionRange(session, row);
-                    } else if (foldStyle != "all")
-                        range = null;
+                if (this.singleLineBlockCommentRe.test(line)) {
+                    if (!this.startRegionRe.test(line) && !this.tripleStarBlockCommentRe.test(line))
+                        return "";
                 }
 
-                return range;
-            }
+                var fw = this._getFoldWidgetBase(session, foldStyle, row);
 
-            if (foldStyle === "markbegin")
-                return;
+                if (!fw && this.startRegionRe.test(line))
+                    return "start"; // lineCommentRegionStart
 
-            var match = line.match(this.foldingStopMarker);
-            if (match) {
-                var i = match.index + match[0].length;
+                return fw;
+            };
 
-                if (match[1])
-                    return this.closingBracketBlock(session, match[1], row, i);
+            this.getFoldWidgetRange = function (session, foldStyle, row, forceMultiline) {
+                var line = session.getLine(row);
 
-                return session.getCommentFoldRange(row, i, -1);
-            }
-        };
+                if (this.startRegionRe.test(line))
+                    return this.getCommentRegionBlock(session, line, row);
 
-        this.getSectionRange = function (session, row) {
-            var line = session.getLine(row);
-            var startIndent = line.search(/\S/);
-            var startRow = row;
-            var startColumn = line.length;
-            row = row + 1;
-            var endRow = row;
-            var maxRow = session.getLength();
-            while (++row < maxRow) {
-                line = session.getLine(row);
-                var indent = line.search(/\S/);
-                if (indent === -1)
-                    continue;
-                if (startIndent > indent)
-                    break;
-                var subRange = this.getFoldWidgetRange(session, "all", row);
+                var match = line.match(this.foldingStartMarker);
+                if (match) {
+                    var i = match.index;
 
-                if (subRange) {
-                    if (subRange.start.row <= startRow) {
-                        break;
-                    } else if (subRange.isMultiLine()) {
-                        row = subRange.end.row;
-                    } else if (startIndent == indent) {
-                        break;
+                    if (match[1])
+                        return this.openingBracketBlock(session, match[1], row, i);
+
+                    var range = session.getCommentFoldRange(row, i + match[0].length, 1);
+
+                    if (range && !range.isMultiLine()) {
+                        if (forceMultiline) {
+                            range = this.getSectionRange(session, row);
+                        } else if (foldStyle != "all")
+                            range = null;
                     }
+
+                    return range;
                 }
-                endRow = row;
-            }
 
-            return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
-        };
-        this.getCommentRegionBlock = function (session, line, row) {
-            var startColumn = line.search(/\s*$/);
-            var maxRow = session.getLength();
-            var startRow = row;
+                if (foldStyle === "markbegin")
+                    return;
 
-            var re = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
-            var depth = 1;
-            while (++row < maxRow) {
-                line = session.getLine(row);
-                var m = re.exec(line);
-                if (!m) continue;
-                if (m[1]) depth--;
-                else depth++;
+                var match = line.match(this.foldingStopMarker);
+                if (match) {
+                    var i = match.index + match[0].length;
 
-                if (!depth) break;
-            }
+                    if (match[1])
+                        return this.closingBracketBlock(session, match[1], row, i);
 
-            var endRow = row;
-            if (endRow > startRow) {
-                return new Range(startRow, startColumn, endRow, line.length);
-            }
-        };
+                    return session.getCommentFoldRange(row, i, -1);
+                }
+            };
 
-    }).call(FoldMode.prototype);
+            this.getSectionRange = function (session, row) {
+                var line = session.getLine(row);
+                var startIndent = line.search(/\S/);
+                var startRow = row;
+                var startColumn = line.length;
+                row = row + 1;
+                var endRow = row;
+                var maxRow = session.getLength();
+                while (++row < maxRow) {
+                    line = session.getLine(row);
+                    var indent = line.search(/\S/);
+                    if (indent === -1)
+                        continue;
+                    if (startIndent > indent)
+                        break;
+                    var subRange = this.getFoldWidgetRange(session, "all", row);
 
-});
+                    if (subRange) {
+                        if (subRange.start.row <= startRow) {
+                            break;
+                        } else if (subRange.isMultiLine()) {
+                            row = subRange.end.row;
+                        } else if (startIndent == indent) {
+                            break;
+                        }
+                    }
+                    endRow = row;
+                }
+
+                return new Range(startRow, startColumn, endRow, session.getLine(endRow).length);
+            };
+            this.getCommentRegionBlock = function (session, line, row) {
+                var startColumn = line.search(/\s*$/);
+                var maxRow = session.getLength();
+                var startRow = row;
+
+                var re = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/;
+                var depth = 1;
+                while (++row < maxRow) {
+                    line = session.getLine(row);
+                    var m = re.exec(line);
+                    if (!m) continue;
+                    if (m[1]) depth--;
+                    else depth++;
+
+                    if (!depth) break;
+                }
+
+                var endRow = row;
+                if (endRow > startRow) {
+                    return new Range(startRow, startColumn, endRow, line.length);
+                }
+            };
+
+        }).call(FoldMode.prototype);
+
+    });
 
 define("ace/mode/folding/smt_lib",
     ["require", "exports", "module", "ace/lib/oop", "ace/range", "ace/mode/folding/cstyle"],
     function (require, exports, module) {
-    "use strict";
+        "use strict";
 
-    var oop = require("../../lib/oop");
-    var Range = require("../../range").Range;
-    var CFoldMode = require("./cstyle").FoldMode;
+        var oop = require("../../lib/oop");
+        var Range = require("../../range").Range;
+        var CFoldMode = require("./cstyle").FoldMode;
 
-    var FoldMode = exports.FoldMode = function (commentRegex) {
-        if (commentRegex) {
-            this.foldingStartMarker = new RegExp(
-                this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
-            );
-            this.foldingStopMarker = new RegExp(
-                this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.end)
-            );
-        }
-    };
-    oop.inherits(FoldMode, CFoldMode);
+        var FoldMode = exports.FoldMode = function (commentRegex) {
+            if (commentRegex) {
+                this.foldingStartMarker = new RegExp(
+                    this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.start)
+                );
+                this.foldingStopMarker = new RegExp(
+                    this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + commentRegex.end)
+                );
+            }
+        };
+        oop.inherits(FoldMode, CFoldMode);
 
-    (function () {
-        this.usingRe = /^\s*using \S/;
+        (function () {
+            this.usingRe = /^\s*using \S/;
 
-        this.getFoldWidgetRangeBase = this.getFoldWidgetRange;
-        this.getFoldWidgetBase = this.getFoldWidget;
+            this.getFoldWidgetRangeBase = this.getFoldWidgetRange;
+            this.getFoldWidgetBase = this.getFoldWidget;
 
-        this.getFoldWidget = function (session, foldStyle, row) {
-            var fw = this.getFoldWidgetBase(session, foldStyle, row);
-            if (!fw) {
-                var line = session.getLine(row);
-                if (/^\s*#region\b/.test(line))
-                    return "start";
-                var usingRe = this.usingRe;
-                if (usingRe.test(line)) {
-                    var prev = session.getLine(row - 1);
-                    var next = session.getLine(row + 1);
-                    if (!usingRe.test(prev) && usingRe.test(next))
-                        return "start"
+            this.getFoldWidget = function (session, foldStyle, row) {
+                var fw = this.getFoldWidgetBase(session, foldStyle, row);
+                if (!fw) {
+                    var line = session.getLine(row);
+                    if (/^\s*#region\b/.test(line))
+                        return "start";
+                    var usingRe = this.usingRe;
+                    if (usingRe.test(line)) {
+                        var prev = session.getLine(row - 1);
+                        var next = session.getLine(row + 1);
+                        if (!usingRe.test(prev) && usingRe.test(next))
+                            return "start"
+                    }
                 }
-            }
-            return fw;
-        };
+                return fw;
+            };
 
-        this.getFoldWidgetRange = function (session, foldStyle, row) {
-            var range = this.getFoldWidgetRangeBase(session, foldStyle, row);
-            if (range)
-                return range;
+            this.getFoldWidgetRange = function (session, foldStyle, row) {
+                var range = this.getFoldWidgetRangeBase(session, foldStyle, row);
+                if (range)
+                    return range;
 
-            var line = session.getLine(row);
-            if (this.usingRe.test(line))
-                return this.getUsingStatementBlock(session, line, row);
+                var line = session.getLine(row);
+                if (this.usingRe.test(line))
+                    return this.getUsingStatementBlock(session, line, row);
 
-            if (/^\s*#region\b/.test(line))
-                return this.getRegionBlock(session, line, row);
-        };
+                if (/^\s*#region\b/.test(line))
+                    return this.getRegionBlock(session, line, row);
+            };
 
-        this.getUsingStatementBlock = function (session, line, row) {
-            var startColumn = line.match(this.usingRe)[0].length - 1;
-            var maxRow = session.getLength();
-            var startRow = row;
-            var endRow = row;
+            this.getUsingStatementBlock = function (session, line, row) {
+                var startColumn = line.match(this.usingRe)[0].length - 1;
+                var maxRow = session.getLength();
+                var startRow = row;
+                var endRow = row;
 
-            while (++row < maxRow) {
-                line = session.getLine(row);
-                if (/^\s*$/.test(line))
-                    continue;
-                if (!this.usingRe.test(line))
-                    break;
+                while (++row < maxRow) {
+                    line = session.getLine(row);
+                    if (/^\s*$/.test(line))
+                        continue;
+                    if (!this.usingRe.test(line))
+                        break;
 
-                endRow = row;
-            }
+                    endRow = row;
+                }
 
-            if (endRow > startRow) {
-                var endColumn = session.getLine(endRow).length;
-                return new Range(startRow, startColumn, endRow, endColumn);
-            }
-        };
+                if (endRow > startRow) {
+                    var endColumn = session.getLine(endRow).length;
+                    return new Range(startRow, startColumn, endRow, endColumn);
+                }
+            };
 
-        this.getRegionBlock = function (session, line, row) {
-            var startColumn = line.search(/\s*$/);
-            var maxRow = session.getLength();
-            var startRow = row;
+            this.getRegionBlock = function (session, line, row) {
+                var startColumn = line.search(/\s*$/);
+                var maxRow = session.getLength();
+                var startRow = row;
 
-            var re = /^\s*#(end)?region\b/;
-            var depth = 1;
-            while (++row < maxRow) {
-                line = session.getLine(row);
-                var m = re.exec(line);
-                if (!m)
-                    continue;
-                if (m[1])
-                    depth--;
-                else
-                    depth++;
+                var re = /^\s*#(end)?region\b/;
+                var depth = 1;
+                while (++row < maxRow) {
+                    line = session.getLine(row);
+                    var m = re.exec(line);
+                    if (!m)
+                        continue;
+                    if (m[1])
+                        depth--;
+                    else
+                        depth++;
 
-                if (!depth)
-                    break;
-            }
+                    if (!depth)
+                        break;
+                }
 
-            var endRow = row;
-            if (endRow > startRow) {
-                return new Range(startRow, startColumn, endRow, line.length);
-            }
-        };
+                var endRow = row;
+                if (endRow > startRow) {
+                    return new Range(startRow, startColumn, endRow, line.length);
+                }
+            };
 
-    }).call(FoldMode.prototype);
+        }).call(FoldMode.prototype);
 
-});
+    });
 
 define("ace/mode/smt_lib",
     ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/smt_lib_highlight_rules",
         "ace/mode/matching_brace_outdent", "ace/mode/behaviour/cstyle", "ace/mode/folding/smt_lib"],
     function (require, exports, module) {
-    "use strict";
+        "use strict";
 
-    var oop = require("../lib/oop");
-    var TextMode = require("./text").Mode;
-    var SmtLibHighlightRules = require("./smt_lib_highlight_rules").SmtLibHighlightRules;
-    var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-    var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
-    var CStyleFoldMode = require("./folding/smt_lib").FoldMode;
+        var oop = require("../lib/oop");
+        var TextMode = require("./text").Mode;
+        var SmtLibHighlightRules = require("./smt_lib_highlight_rules").SmtLibHighlightRules;
+        var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
+        var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
+        var CStyleFoldMode = require("./folding/smt_lib").FoldMode;
 
-    var Mode = function () {
-        this.HighlightRules = SmtLibHighlightRules;
-        this.$outdent = new MatchingBraceOutdent();
-        this.$behaviour = new CstyleBehaviour();
-        this.foldingRules = new CStyleFoldMode();
-    };
-    oop.inherits(Mode, TextMode);
+        var Mode = function () {
+            this.HighlightRules = SmtLibHighlightRules;
+            this.$outdent = new MatchingBraceOutdent();
+            this.$behaviour = new CstyleBehaviour();
+            this.foldingRules = new CStyleFoldMode();
+        };
+        oop.inherits(Mode, TextMode);
 
-    (function () {
+        (function () {
 
-        this.lineCommentStart = ";";
-        this.blockComment = {start: "/*", end: "*/"};
+            this.lineCommentStart = ";";
+            this.blockComment = {start: "/*", end: "*/"};
 
-        this.getNextLineIndent = function (state, line, tab) {
-            var indent = this.$getIndent(line);
+            this.getNextLineIndent = function (state, line, tab) {
+                var indent = this.$getIndent(line);
 
-            var tokenizedLine = this.getTokenizer().getLineTokens(line, state);
-            var tokens = tokenizedLine.tokens;
+                var tokenizedLine = this.getTokenizer().getLineTokens(line, state);
+                var tokens = tokenizedLine.tokens;
 
-            if (tokens.length && tokens[tokens.length - 1].type == "comment") {
-                return indent;
-            }
-
-            if (state == "start") {
-                var match = line.match(/^.*[\{\(\[]\s*$/);
-                if (match) {
-                    indent += tab;
+                if (tokens.length && tokens[tokens.length - 1].type == "comment") {
+                    return indent;
                 }
-            }
 
-            return indent;
-        };
+                if (state == "start") {
+                    var match = line.match(/^.*[\{\(\[]\s*$/);
+                    if (match) {
+                        indent += tab;
+                    }
+                }
 
-        this.checkOutdent = function (state, line, input) {
-            return this.$outdent.checkOutdent(line, input);
-        };
+                return indent;
+            };
 
-        this.autoOutdent = function (state, doc, row) {
-            this.$outdent.autoOutdent(doc, row);
-        };
+            this.checkOutdent = function (state, line, input) {
+                return this.$outdent.checkOutdent(line, input);
+            };
+
+            this.autoOutdent = function (state, doc, row) {
+                this.$outdent.autoOutdent(doc, row);
+            };
 
 
-        this.createWorker = function (session) {
-            return null;
-        };
+            this.createWorker = function (session) {
+                return null;
+            };
 
-        this.$id = "ace/mode/smt_lib";
-    }).call(Mode.prototype);
+            this.$id = "ace/mode/smt_lib";
+        }).call(Mode.prototype);
 
-    exports.Mode = Mode;
-});
+        exports.Mode = Mode;
+    });
