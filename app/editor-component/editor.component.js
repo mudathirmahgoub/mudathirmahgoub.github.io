@@ -30,23 +30,30 @@ angular.module('cvc').component('editor', {
             // waiting for run
             $scope.waitingRun = false;
 
-            // ace editor initialization
-            var Range = ace.require("ace/range").Range;
-            var editor = ace.edit('editor');
+            // editor initialization
+            var editorElement = document.getElementById('editor');
+            var editor = monaco.editor.create(editorElement, {
+                theme: 'vs-dark',
+                model: monaco.editor.createModel("", "clojure")
+            });
 
-            var outputEditor = ace.edit('outputEditor');
-            outputEditor.setReadOnly(true);
-            outputEditor.setHighlightActiveLine(false);
-            outputEditor.renderer.$cursorLayer.element.style.display = "none"
-
-            var errors = [];
-
-            $scope.isDarkTheme = true;
-            editor.setTheme("ace/theme/idle_fingers");
-            outputEditor.setTheme("ace/theme/idle_fingers");
-
-            editor.getSession().setMode("ace/mode/smt_lib");
-            outputEditor.getSession().setMode("ace/mode/smt_lib");
+            var outputEditorElement = document.getElementById('outputEditor');
+            var outputEditor = monaco.editor.create(outputEditorElement, {
+                theme: 'vs-dark',
+                model: monaco.editor.createModel("", "clojure")
+            });
+            // outputEditor.setReadOnly(true);
+            // outputEditor.setHighlightActiveLine(false);
+            // outputEditor.renderer.$cursorLayer.element.style.display = "none"
+            //
+            // var errors = [];
+            //
+            // $scope.isDarkTheme = true;
+            // editor.setTheme("ace/theme/idle_fingers");
+            // outputEditor.setTheme("ace/theme/idle_fingers");
+            //
+            // editor.getSession().setMode("ace/mode/smt_lib");
+            // outputEditor.getSession().setMode("ace/mode/smt_lib");
 
             var defaultCode = "(set-logic ALL)\n" +
                 "(set-option :produce-models true)\n" +
@@ -60,8 +67,8 @@ angular.module('cvc').component('editor', {
                 "(check-sat)\n" +
                 "(get-model)\n";
 
-            editor.setValue(defaultCode);
-            editor.selection.clearSelection();
+            editor.getModel().setValue(defaultCode);
+            // editor.selection.clearSelection();
 
             //https://github.com/devuxd/SeeCodeRun/wiki/Ace-code-editor
             editor.on("mousemove", function (e){
