@@ -136,7 +136,6 @@ angular.module('cvc').component('editor', {
                 cvcService.getExample(example).then(function (response) {
                     $scope.code = response.code;
                     editor.getModel().setValue(response.code);
-                    editor.getModel().selection.clearSelection();
 
                     // change the language
                     if(example.includes('smt')){
@@ -299,32 +298,10 @@ angular.module('cvc').component('editor', {
             function setDecorations(reset) {
 
                 if (reset) {
-                    decorations = [];
                     errors = [];
-                }
-                else {
-
                 }
 
                 setErrorDecorations();
-
-                // sort decorations so that error decorations get displayed after other decorations
-                // i.e. the order would be: warning, info, error
-
-                decorations.sort(function (a, b) {
-
-                    var typeA = a.type.toUpperCase();
-                    var typeB = b.type.toUpperCase();
-                    if (typeA > typeB) {
-                        return -1;
-                    }
-                    if (typeA < typeB) {
-                        return 1;
-                    }
-                    return 0;
-                });
-
-                // editor.getSession().setDecorations(decorations);
 
                 function setErrorDecorations() {
                     if (sharedService.checkNested($scope, 'results', 'data')) {
@@ -343,28 +320,14 @@ angular.module('cvc').component('editor', {
 
                                     var error = {};
 
-                                    error.lineNumber = parseInt(numbers[0]);
-                                    error.columnNumber = parseInt(numbers[1]);
+                                    error.startLineNumber = parseInt(numbers[0]);
+                                    error.startColumn = parseInt(numbers[1]);
                                     error.message = parts.slice(3, parts.length).join('').trim();
-
-                                    var range = new Range(error.lineNumber - 1, error.columnNumber - 1,
-                                        error.lineNumber - 1, error.columnNumber);
-                                    var classes = "errorHighlight row" + error.lineNumber +
-                                        "column" + error.columnNumber;
-                                    editor.session.addMarker(range,classes, "text");
-
-                                    var annotationType = 'error';
-
-                                    decorations.push({
-                                        row: error.lineNumber - 1,
-                                        column: 0,
-                                        html: error.message,
-                                        type: annotationType
-                                    });
                                     errors.push(error);
                                 });
                             }
                         });
+                        monaco.editor.setModelMarkers(editor.getModel(), 'test', errors);
                     }
                 }
             }
@@ -468,17 +431,11 @@ angular.module('cvc').component('editor', {
                     case 'sygus1':
                     case 'sygus2':
                     case 'sygus':{
-                                        editor.getSession().setMode("ace/mode/smt_lib");
-                                        outputEditor.getSession().setMode("ace/mode/smt_lib");
+
                                  }
                                     break;
                     case 'tptp':{
-                                    editor.getSession().setMode("ace/mode/tptp");
-                                    outputEditor.getSession().setMode("ace/mode/tptp");
-                                }
-                                break;
-                    {
-                                    console.log('sygus');
+
                                 }
                                 break;
 
