@@ -34,26 +34,23 @@ angular.module('cvc').component('editor', {
             var editorElement = document.getElementById('editor');
             var editor = monaco.editor.create(editorElement, {
                 theme: 'vs-dark',
-                model: monaco.editor.createModel("", "clojure")
+                model: monaco.editor.createModel("", "clojure"),
+                automaticLayout: true
             });
+
+            var decorations = editor.deltaDecorations([], []);
 
             var outputEditorElement = document.getElementById('outputEditor');
             var outputEditor = monaco.editor.create(outputEditorElement, {
                 theme: 'vs-dark',
-                model: monaco.editor.createModel("", "clojure")
+                model: monaco.editor.createModel("", "clojure"),
+                automaticLayout: true
             });
             outputEditor.updateOptions({readOnly: true});
-            // outputEditor.setHighlightActiveLine(false);
-            // outputEditor.renderer.$cursorLayer.element.style.display = "none"
-            //
-            // var errors = [];
-            //
-            // $scope.isDarkTheme = true;
-            // editor.setTheme("ace/theme/idle_fingers");
-            // outputEditor.setTheme("ace/theme/idle_fingers");
-            //
-            // editor.getSession().setMode("ace/mode/smt_lib");
-            // outputEditor.getSession().setMode("ace/mode/smt_lib");
+
+            var errors = [];
+
+            $scope.isDarkTheme = true;
 
             var defaultCode = "(set-logic ALL)\n" +
                 "(set-option :produce-models true)\n" +
@@ -68,7 +65,6 @@ angular.module('cvc').component('editor', {
                 "(get-model)\n";
 
             editor.getModel().setValue(defaultCode);
-            // editor.selection.clearSelection();
 
             //https://github.com/devuxd/SeeCodeRun/wiki/Ace-code-editor
             // editor.on("mousemove", function (e){
@@ -114,7 +110,7 @@ angular.module('cvc').component('editor', {
                 }
             }
 
-            $scope.code = editor.getValue();
+            $scope.code = editor.getModel().getValue();
 
             // tabs
             $scope.activeTab = 0; // Logs tab
@@ -139,8 +135,8 @@ angular.module('cvc').component('editor', {
                 // load the example code
                 cvcService.getExample(example).then(function (response) {
                     $scope.code = response.code;
-                    editor.setValue(response.code);
-                    editor.selection.clearSelection();
+                    editor.getModel().setValue(response.code);
+                    editor.getModel().selection.clearSelection();
 
                     // change the language
                     if(example.includes('smt')){
@@ -172,8 +168,7 @@ angular.module('cvc').component('editor', {
                 else {
                     $scope.jobId = hash;
                     cvcService.getJob($scope.jobId).then(function (response) {
-                        editor.setValue(response.code);
-                        editor.selection.clearSelection();
+                        editor.getModel().setValue(response.code);
                     });
                 }
             }
@@ -181,7 +176,7 @@ angular.module('cvc').component('editor', {
             $scope.download = function () {
 
                 //ToDo: remove this line
-                $scope.code = editor.getValue();
+                $scope.code = editor.getModel().getValue();
                 var data = new Blob([$scope.code], {type: 'text/plain'});
 
                 // to save memory
@@ -198,21 +193,19 @@ angular.module('cvc').component('editor', {
                 $scope.activeTab = 0;
 
                 if(sharedService.checkNested(response, 'data')) {
-                    outputEditor.setValue(response.data.join('\n'));
-                    outputEditor.selection.clearSelection();
+                    outputEditor.getModel().setValue(response.data.join('\n'));
                 }
                 else {
-                    outputEditor.setValue('');
-                    outputEditor.selection.clearSelection();
+                    outputEditor.getModel().setValue('');
                 }
 
 
-                // set annotations
-                setAnnotations(reset);
+                // set decorations
+                setDecorations(reset);
             }
 
             $rootScope.codeEmpty = function () {
-                $scope.code = editor.getValue();
+                $scope.code = editor.getModel().getValue();
                 if (!$scope.code || !$scope.code.trim()) {
 
                     $scope.results = {};
@@ -231,8 +224,8 @@ angular.module('cvc').component('editor', {
                 if (!$scope.waitingCheck) {
                     // initialize the results
                     $scope.results = {};
-                    // initialize annotations
-                    setAnnotations(true);
+                    // initialize decorations
+                    setDecorations(true);
 
                     if ($rootScope.codeEmpty()) {
                         return;
@@ -303,27 +296,22 @@ angular.module('cvc').component('editor', {
                     });
             }
 
-            function setAnnotations(reset) {
-                var annotations;
+            function setDecorations(reset) {
 
                 if (reset) {
-                    annotations = [];
+                    decorations = [];
                     errors = [];
-                    var markers = editor.getSession().getMarkers();
-                    angular.forEach(markers, function (marker) {
-                       editor.getSession().removeMarker(marker.id);
-                    });
                 }
                 else {
-                    annotations = editor.getSession().getAnnotations();
+
                 }
 
-                setErrorAnnotations();
+                setErrorDecorations();
 
-                // sort annotations so that error annotations get displayed after other annotations
+                // sort decorations so that error decorations get displayed after other decorations
                 // i.e. the order would be: warning, info, error
 
-                annotations.sort(function (a, b) {
+                decorations.sort(function (a, b) {
 
                     var typeA = a.type.toUpperCase();
                     var typeB = b.type.toUpperCase();
@@ -336,9 +324,9 @@ angular.module('cvc').component('editor', {
                     return 0;
                 });
 
-                editor.getSession().setAnnotations(annotations);
+                // editor.getSession().setDecorations(decorations);
 
-                function setErrorAnnotations() {
+                function setErrorDecorations() {
                     if (sharedService.checkNested($scope, 'results', 'data')) {
                         angular.forEach($scope.results.data, function (data) {
 
@@ -367,7 +355,7 @@ angular.module('cvc').component('editor', {
 
                                     var annotationType = 'error';
 
-                                    annotations.push({
+                                    decorations.push({
                                         row: error.lineNumber - 1,
                                         column: 0,
                                         html: error.message,
@@ -382,20 +370,17 @@ angular.module('cvc').component('editor', {
             }
 
             $scope.upload = function (code) {
-                editor.setValue(code);
-                editor.selection.clearSelection();
+                editor.getModel().setValue(code);
             }
 
 
             $scope.toggleTheme = function () {
                 $scope.isDarkTheme = !$scope.isDarkTheme;
                 if ($scope.isDarkTheme) {
-                    editor.setTheme("ace/theme/idle_fingers");
-                    outputEditor.setTheme("ace/theme/idle_fingers");
+                    monaco.editor.setTheme('vs-dark');
                 }
                 else {
-                    editor.setTheme("ace/theme/xcode");
-                    outputEditor.setTheme("ace/theme/xcode");
+                    monaco.editor.setTheme('vs-light');
                 }
             }
 
