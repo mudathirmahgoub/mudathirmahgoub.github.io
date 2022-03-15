@@ -71,26 +71,26 @@ angular.module('cvc').component('editor', {
             // editor.selection.clearSelection();
 
             //https://github.com/devuxd/SeeCodeRun/wiki/Ace-code-editor
-            editor.on("mousemove", function (e){
-                var position = e.getDocumentPosition();
-
-                angular.forEach(errors, function (error) {
-                    if (position.row == error.lineNumber - 1 &&
-                        position.column == error.columnNumber - 1) {
-                        var text = error.message;
-                        if (text.length > 0) {
-                            var pixelPosition = editor.renderer.textToScreenCoordinates(position);
-                            pixelPosition.pageY += editor.renderer.lineHeight;
-                            updateTooltip(pixelPosition, text);
-                        } else {
-                            updateTooltip(editor.renderer.textToScreenCoordinates(position));
-                        }
-                    }
-                    else{
-                        updateTooltip(editor.renderer.textToScreenCoordinates(position));
-                    }
-                });
-            });
+            // editor.on("mousemove", function (e){
+            //     var position = e.getDocumentPosition();
+            //
+            //     angular.forEach(errors, function (error) {
+            //         if (position.row == error.lineNumber - 1 &&
+            //             position.column == error.columnNumber - 1) {
+            //             var text = error.message;
+            //             if (text.length > 0) {
+            //                 var pixelPosition = editor.renderer.textToScreenCoordinates(position);
+            //                 pixelPosition.pageY += editor.renderer.lineHeight;
+            //                 updateTooltip(pixelPosition, text);
+            //             } else {
+            //                 updateTooltip(editor.renderer.textToScreenCoordinates(position));
+            //             }
+            //         }
+            //         else{
+            //             updateTooltip(editor.renderer.textToScreenCoordinates(position));
+            //         }
+            //     });
+            // });
 
             //https://github.com/devuxd/SeeCodeRun/wiki/Ace-code-editor
             function updateTooltip(position, text){
