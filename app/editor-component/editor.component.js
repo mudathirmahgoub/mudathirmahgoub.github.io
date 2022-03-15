@@ -42,7 +42,7 @@ angular.module('cvc').component('editor', {
                 theme: 'vs-dark',
                 model: monaco.editor.createModel("", "clojure")
             });
-            outputEditor.updateOptions({readOnly: false});
+            outputEditor.updateOptions({readOnly: true});
             // outputEditor.setHighlightActiveLine(false);
             // outputEditor.renderer.$cursorLayer.element.style.display = "none"
             //
