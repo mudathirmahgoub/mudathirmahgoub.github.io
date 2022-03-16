@@ -38,8 +38,6 @@ angular.module('cvc').component('editor', {
                 automaticLayout: true
             });
 
-            var decorations = editor.deltaDecorations([], []);
-
             var outputEditorElement = document.getElementById('outputEditor');
             var outputEditor = monaco.editor.create(outputEditorElement, {
                 theme: 'vs-dark',
@@ -316,8 +314,10 @@ angular.module('cvc').component('editor', {
                                     var error = {};
 
                                     error.startLineNumber = parseInt(numbers[0]);
-                                    error.startColumn = parseInt(numbers[1]);
+                                    error.startColumn = 1; // parseInt(numbers[1]);
+                                    error.endColumn = 1000;
                                     error.message = parts.slice(3, parts.length).join('').trim();
+                                    console.log(data);
                                     errors.push(error);
                                 });
                             }
