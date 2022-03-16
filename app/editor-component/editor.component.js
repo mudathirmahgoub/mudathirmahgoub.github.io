@@ -112,9 +112,6 @@ angular.module('cvc').component('editor', {
 
             $scope.code = editor.getModel().getValue();
 
-            // tabs
-            $scope.activeTab = 0; // Logs tab
-
             // get the list of examples
             cvcService.getExamples().then(function (response) {
                 $scope.exampleKinds = response.kinds;
@@ -189,7 +186,6 @@ angular.module('cvc').component('editor', {
             function updateView(response, reset) {
 
                 $scope.results = response;
-                $scope.activeTab = 0;
 
                 if(sharedService.checkNested(response, 'data')) {
                     outputEditor.getModel().setValue(response.data.join('\n'));
@@ -212,7 +208,6 @@ angular.module('cvc').component('editor', {
                         "Parse Error: /code.txt:1.1: Empty code"
                     ];
 
-                    $scope.activeTab = 0; // output tab
                     return true;
                 }
                 return false;
