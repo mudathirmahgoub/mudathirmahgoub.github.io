@@ -1,44 +1,34 @@
 <!doctype html>
-<html lang="en" ng-app="cvc">
+<html lang="en" data-beasties-container>
   <head>
-
-    <script>document.write('<base href="' + document.location + '" />');</script>
     <meta charset="utf-8">
-    <title>cvc5</title>
-    <link rel="icon" href="icons/logo.svg">
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" href="lib/fa/css/font-awesome.css"/>
-    <link rel="stylesheet" href="app.css"/>
-    <link rel="stylesheet" href="core/splitter-directive/splitter.directive.css"/>
-    <link rel="stylesheet" href="editor-component/editor.component.css"/>
-    <link rel="stylesheet" href="arguments-directive/arguments.directive.css"/>
-    <link href="js/vs/editor/editor.main.css" rel="stylesheet" />
-    <script src="lib/angular/angular.js"></script>
-    <script src="lib/angular/angular-route.js"></script>
-    <script src="lib/ui-bootstrap/ui-bootstrap-tpls-2.5.0.min.js"></script>
+    <title>Kind 2</title>
+    <base href="./">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Write Lustre programs and check them with the Kind 2 model checker, in your browser.">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="kind2.png">
+    <script>
+      // Apply the saved theme before the first paint.
+      (function () {
+        var theme = null;
+        try {
+          theme = JSON.parse(localStorage.getItem('kind2.theme'));
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme =
+            window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <script src="environment.js"></script>
-    <script src="configurations.js"></script>
-    <script src="app.module.js"></script>
-    <script src="app.config.js"></script>
-    <script src="core/shared-service/shared.service.js"></script>
-    <script src="core/input-file-directive/input-file.directive.js"></script>
-    <script src="cvc-service/cvc.service.js"></script>
-    <script src="core/splitter-directive/splitter.directive.js"></script>
-    <script src="modal-component/modal.component.js"></script>
-    <script src="arguments-directive/arguments.directive.js"></script>
-    <script src="editor-component/editor.component.js"></script>
-    <script src="lib/jquery/jquery-3.2.1.min.js"></script>
-    <script src="lib/angular/angular-spinner/angular-spinner.min.js"></script>
-    <script>var require = { paths: { 'vs': 'js/vs' } };</script>
-    <script type="text/javascript" src="js/vs/loader.js"></script>
-    <script type="text/javascript" src="js/vs/editor/editor.main.nls.js"></script>
-    <script type="text/javascript" src="js/vs/editor/editor.main.js"></script>
-  </head>
+  <style>:root{color-scheme:light;--font-ui:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;--font-mono:ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;--editor-font-size:13.5px;--control-height:32px;--radius:6px;--surface-0:#ffffff;--surface-1:#f6f7f9;--surface-2:#eceef2;--surface-3:#dfe3e8;--surface-raised:#ffffff;--border:#dde1e6;--border-strong:#c3c9d1;--shadow:0 8px 28px rgba(27, 31, 36, .16);--text:#1b1f24;--text-muted:#57606a;--text-faint:#8b949e;--accent:#0969da;--accent-hover:#0757b8;--accent-fg:#ffffff;--accent-soft:rgba(9, 105, 218, .1);--primary:#2b7a33;--primary-hover:#236829;--primary-fg:#ffffff;--passed:#2a8a3e;--failed:#cf222e;--unknown:#9a6700;--running:#bc4c00;--passed-soft:rgba(42, 138, 62, .12);--failed-soft:rgba(207, 34, 46, .1);--unknown-soft:rgba(154, 103, 0, .13);--editor-bg:var(--surface-0)}@media(pointer:coarse){:root{--control-height:40px;--editor-font-size:14px}}*,*:before,*:after{box-sizing:border-box}html,body{height:100%;margin:0}body{overflow:hidden;background:var(--surface-1);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}*{scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent}</style><link rel="stylesheet" href="styles-GEZBI4LQ.css" media="print" data-beasties-media="all"><noscript><link rel="stylesheet" href="styles-GEZBI4LQ.css"></noscript></head>
   <body>
-    <h1 class="indexHeader"><a href="https://cvc5.github.io">
-      <img src="icons/logo.svg" width="80" height="30">
-    </a></h1>
-    <div ng-view class="indexView">
-    </div>
-  </body>
+    <app-root></app-root>
+    <noscript>Kind 2 needs JavaScript to run.</noscript>
+  <script src="main-7ZDZLGVH.js" type="module"></script><script>document.querySelectorAll('link[data-beasties-media]').forEach(function(l){l.media=l.getAttribute('data-beasties-media');l.removeAttribute('data-beasties-media')})</script></body>
 </html>

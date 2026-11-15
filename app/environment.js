@@ -1,16 +1,12 @@
 /**
- * Environment configuration
+ * Runtime configuration. Edit this file on the server: no rebuild is needed.
+ *
+ * apiUrl is the address of kind2-webservices. Examples:
+ *
+ *   '/kindservices/'                              same host as this page (production)
+ *   '/kindservices-dev/'                          the development services
+ *   'https://kind.cs.uiowa.edu/kindservices/'     another host (it must allow CORS)
  */
-
-var __env = {}
-
-// production api Url. No need to change this when deploying the development branch
-__env.apiUrl = "https://kind.cs.uiowa.edu/cvc5services/";
-
-// Replace this file with env.dev.js to set development configuration
-
-// remote development api Url
-//__env.apiUrl = "https://kind.cs.uiowa.edu/cvcservices-dev/";
-
-// local development api Url
-// __env.apiUrl = "http://localhost:8080/cvcservices_war/";
+window.kindEnvironment = {
+  apiUrl: 'https://kind.cs.uiowa.edu/kindservices/',
+};
